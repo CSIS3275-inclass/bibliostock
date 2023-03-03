@@ -1,19 +1,26 @@
 package com.example.bibliostock.model;
 
-import java.util.Date;
+
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "User")
-public class User {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)//customer and manager will be in the same table
+@DiscriminatorColumn(name="isManager", discriminatorType=DiscriminatorType.INTEGER)//differentiates customer and manager -> 0 for customers and 1 for manager
+public abstract class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
@@ -26,22 +33,18 @@ public class User {
 	
 	@Column(name = "email")
 	private String email;
-	
-	@Column(name = "isAdmin")
-	private Boolean isAdmin;
-
-// user can be manager without being admin
-	@Column(name = "isManager")
-	private Boolean isManager;
-	
+		
 	@Column(name = "dateCreated")
 	@Temporal(TemporalType.DATE)
-	private Date dateCreated;
+	private LocalDate dateCreated;
 	
-//	Indicates if session is active / user is logged in
+	//	Indicates if session is active / user is logged in
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
+	public User() {
+		
+	}
 	
 	
 	public User(String username, String password, String email) {
@@ -85,27 +88,11 @@ public class User {
 		this.email = email;
 	}
 
-	public Boolean getIsAdmin() {
-		return isAdmin;
-	}
-
-	public void setIsAdmin(Boolean isAdmin) {
-		this.isAdmin = isAdmin;
-	}
-
-	public Boolean getIsManager() {
-		return isManager;
-	}
-
-	public void setIsManager(Boolean isManager) {
-		this.isManager = isManager;
-	}
-
-	public Date getDateCreated() {
+	public LocalDate getDateCreated() {
 		return dateCreated;
 	}
 
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(LocalDate dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
@@ -121,3 +108,5 @@ public class User {
 	
 
 }
+
+
