@@ -43,8 +43,26 @@ git log //see commit history
 ```
 
 ## Resources 
-
+**Git**
 - [Install git](https://www.atlassian.com/git/tutorials/install-git)
 - [User Manual](https://git-scm.com/docs/user-manual)
 - [References](https://git-scm.com/docs)
 - [Collaborating with pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests)
+
+**SpringJPA**
+- [JPA repositories - Supported keywords inside method names](https://docs.spring.io/spring-data/jpa/docs/1.5.0.RELEASE/reference/html/jpa.repositories.html#:~:text=Table%C2%A02.3.%C2%A0Supported%20keywords%20inside%20method%20names)
+- Manipulate how JPA queries the database with the naming of the method
+e.g.
+```
+Set<Course> findBySectionID(blabla)
+// query path Course class -> Section class > its ID property 
+```
+
+# Recommended practices
+(Notes from class)
+## In model classes
+- For sets/array/list of properties to avoid instantiating objects for each instances -> `Fetch.TYPE Lazy`
+- For single properties (foreign keys) it's ok to set `Fetch.TYPE eager`
+- Add `jsonproperty` to nested properties to let JPA know which class it should refer to when converting it from json to entity object in api controller
+- Add `jsonignore` to relationship-related properties
+
