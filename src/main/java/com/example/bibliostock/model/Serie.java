@@ -3,6 +3,9 @@ package com.example.bibliostock.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,8 +26,11 @@ public class Serie {
 	@Column(name = "name")
 	private String name;
 	
-	//determined by serie property in Book entity
+	//A book only has one serie
+	//A serie can have multiple books
 	@OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	@JsonProperty
 	private Set<Book> books = new HashSet<>();
 	
 	

@@ -1,19 +1,24 @@
 package com.example.bibliostock.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.MapsId;
 
 @Embeddable //composite key for bookstock table
 public class BookFormatID implements Serializable{
-	
+	private static final long serialVersionUID = 1L;
+	 @Column(name = "bookID",
+			 insertable=false, updatable=false)
+//	@MapsId("bookID") //what's in BookFormatID embedded class
 	private long bookID;
 	
+	 @Column(name = "formatID",
+			 insertable=false, updatable=false)
+//	@MapsId("formatID") //what's in BookFormatID embedded class
 	private long formatID;
 	
 	
@@ -39,4 +44,3 @@ public class BookFormatID implements Serializable{
 
 	
 }
-

@@ -3,13 +3,16 @@ package com.example.bibliostock.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -21,20 +24,21 @@ public class Favorite {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long ID;
 	
-	//One Customer only has one favorite
-	@OneToOne(fetch=FetchType.LAZY, optional = false)
+	//A Customer only has one favorite
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="customerID", nullable=false)
 	private Customer customer;
 	
 	//One favorite has multiple books
-	//Same books can be in multiple favorites
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(
-			name="FavoriteBook",
-			joinColumns = @JoinColumn(name="favoriteID"),
-			inverseJoinColumns= @JoinColumn(name="bookID"))
+	//A book can be in multiple favorites
+	@ManyToMany(mappedBy="favorites", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	@JsonProperty("books")
 	private Set<Book> books = new HashSet<>();
 	
+	public Favorite() {
+		
+	}
 	
 	public Favorite(Customer customer) {
 		this.customer = customer;
@@ -67,12 +71,10 @@ public class Favorite {
 	}
 	
 	public void addBook(Book book) {
-		books.add(book);
+		this.books.add(book);
 		Set<Favorite> favorites = book.getFavorites();
 		favorites.add(this);
 		book.setFavorites(favorites);
 	}
-	
-	
 	
 }

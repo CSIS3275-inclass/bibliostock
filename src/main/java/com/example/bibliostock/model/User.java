@@ -1,6 +1,5 @@
 package com.example.bibliostock.model;
 
-
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -17,8 +16,8 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "User")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)//customer and manager will be in the same table
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)//customer and manager will be in the same table   
 @DiscriminatorColumn(name="isManager", discriminatorType=DiscriminatorType.INTEGER)//differentiates customer and manager -> 0 for customers and 1 for manager
 public abstract class User {
 	@Id
@@ -48,14 +47,13 @@ public abstract class User {
 	
 	
 	public User(String username, String password, String email) {
-	super();
-	this.username = username;
-	this.password = password;
-	this.email = email;
-}
-
-	//Getters and setters
-
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		dateCreated=LocalDate.now();
+		isActive=false;	
+	}
+	
 	public long getID() {
 		return ID;
 	}
@@ -103,10 +101,5 @@ public abstract class User {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
-	
-	
-	
 
 }
-
-

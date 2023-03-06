@@ -3,17 +3,22 @@ package com.example.bibliostock.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="Author")
+@Table(name="authors")
 public class Author {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -23,9 +28,15 @@ public class Author {
 	
 	private String statement;
 	
-	//multiple authors can have multiple books
-	//multiple books can be written by an author
-	@ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	//an author can have multiple books
+	//a book can be written by multiple authors
+	@ManyToMany
+	@JoinTable(
+			name="AuthorBook",
+			joinColumns = @JoinColumn(name="authorID"),
+			inverseJoinColumns = @JoinColumn(name="bookID")
+			)
+	@JsonIgnore
 	private Set<Book> books = new HashSet<>();
 	
 	public Author() {
@@ -35,7 +46,7 @@ public class Author {
 		this.name = name;
 		this.statement = statement;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -50,6 +61,15 @@ public class Author {
 
 	public void setStatement(String statement) {
 		this.statement = statement;
+	}
+	
+	
+	
+	public Set<Book> getBooks() {
+		return books;
+	}
+	public void setBooks(Set<Book> books) {
+		this.books = books;
 	}
 	
 	public void addBook(Book book)
