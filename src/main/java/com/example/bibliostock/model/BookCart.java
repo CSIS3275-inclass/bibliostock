@@ -1,5 +1,6 @@
 package com.example.bibliostock.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -22,12 +23,14 @@ public class BookCart {
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="CartID")
+	@JsonIgnore
 	@JsonProperty("cart")
 	private Cart cart;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="bookID")
 	@JoinColumn(name="formatID")
+	@JsonIgnore
 	@JsonProperty("bookStock")
 	private BookStock bookStock;
 	

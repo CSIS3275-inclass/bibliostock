@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -37,11 +38,13 @@ public class Cart { //Already initialized when customer is initiallized
 	//One Customer only has one cart
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="customerID")
+	@JsonIgnore
 	private Customer customer;
 	
 	//One Cart has many books
 	//same books are in many carts
 	@OneToMany(mappedBy="cart",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JsonProperty("addedItems")
 	private Set<BookCart> addedItems = new HashSet<>();
 	

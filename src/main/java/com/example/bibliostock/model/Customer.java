@@ -2,6 +2,7 @@ package com.example.bibliostock.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -21,11 +22,13 @@ public class Customer extends User{
 	
 	//A Customer only has one favorite
 	@OneToOne(mappedBy="customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JsonProperty("favorite")
 	private Favorite favorite;
 	
 	//One Customer only has one cart
 	@OneToOne(mappedBy="customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JsonProperty("cart")
 	private Cart cart;
 	

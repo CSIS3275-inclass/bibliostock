@@ -38,6 +38,7 @@ public class BookStock {
 		referencedColumnName = "ID",
 		insertable=false, updatable=false)
 	@MapsId("formatID") //what's in BookFormatID embedded class
+	@JsonIgnore
 	@JsonProperty("format")
 	private Format format;
 
@@ -47,6 +48,7 @@ public class BookStock {
 		referencedColumnName = "ID",
 		insertable=false, updatable=false)
 	@MapsId("bookID") //what's in BookFormatID embedded class
+	@JsonIgnore
 	@JsonProperty("book")
 	private Book book;
 	
@@ -54,6 +56,7 @@ public class BookStock {
 	//a manager can add multiple inventory items
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="managerID")
+	@JsonIgnore
 	@JsonProperty("manager")
 	private Manager manager;
 	

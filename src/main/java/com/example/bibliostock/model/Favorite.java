@@ -27,6 +27,7 @@ public class Favorite {
 	//A Customer only has one favorite
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="customerID", nullable=false)
+	@JsonIgnore
 	private Customer customer;
 	
 	//One favorite has multiple books
