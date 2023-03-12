@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -62,9 +63,7 @@ public class BibliostockApplication {
 		ArrayList<Serie> series = new ArrayList<Serie>();
 		ArrayList<Format> formats = new ArrayList<Format>();
 		ArrayList<BookStock> inventoryItems= new ArrayList<BookStock>();
-		ArrayList<Cart> customerCarts= new ArrayList<Cart>();
-		ArrayList<BookCart> cartItems= new ArrayList<BookCart>();
-		
+
 		
 		//adding authors
 		authors.add(new Author("Seumas Butland","Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi."));
@@ -148,30 +147,7 @@ public class BibliostockApplication {
 		
 		//add inventory items - ONLY when book,format, and other needed entities are saved
 		inventoryItems.add(new BookStock(books.get(0),formats.get(0),44.97,66.03,677,managers.get(0)));
-//		inventoryItems.forEach(bookStockRepo::save);
 		bookStockRepo.saveAll(inventoryItems);
-		
-		//add cart items for customer1 - customers and inventory items need to be saved first
-		//Cart are already created for each customers when they are initiallized
-		customers.forEach(customer-> customerCarts.add(customer.getCart()));
-
-		BookStock anItem = bookStockRepo.findByIDBookIDAndFormatID(1, 1).get();
-		Cart aCart = cartRepo.findByCustomer(customerRepo.findByID(1).get()).get();
-		BookCart aBookCart = new BookCart(aCart,anItem);
-		
-		Set<BookCart> newBooks= new HashSet<>();
-		newBooks.add(aBookCart);
-//		bookCartRepo.save(aBookCart);
-		
-		anItem.setBooksInCart(newBooks);
-		System.out.print("Books in Cart "+anItem.getBooksInCart());
-//		System.out.print("Books in Cart "+inventoryItems.get(0).getBooksInCart());
-//		customerCarts.get(0).addBook(bookCartRepo, newCartItem);
-//		customerCarts.get(0).addBook(bookCartRepo, inventoryItems.get(0));
-		cartRepo.saveAll(customerCarts);
-		
-		//add item to cart
-//		customerCarts.get(0).addBook(bookCartRepo, inventoryItems.get(0));
 		
 		bookRepo.findAll().forEach(System.out::println);
 		books.get(1).info();

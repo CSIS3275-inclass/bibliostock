@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,7 +26,8 @@ import jakarta.transaction.Transactional;
 
 @Entity
 @Table(name="Cart")
-public class Cart { //Already initialized when customer is initiallized
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "ID") //serialize relationship-related fields without causing infinite loop
+public class Cart { //Already initialized when customer is initialized
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
@@ -38,13 +41,15 @@ public class Cart { //Already initialized when customer is initiallized
 	//One Customer only has one cart
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="customerID")
+	@JsonProperty("CustomerID")
 	@JsonIgnore
 	private Customer customer;
 	
-	//One Cart has many books
-	//same books are in many carts
+	//One Cart has many inventoried books
+	//same inventoried books are in many carts
+	//CascadeType.ALL so any changes made to the cart affect the related cart items
 	@OneToMany(mappedBy="cart",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
+//	@JsonIgnore
 	@JsonProperty("addedItems")
 	private Set<BookCart> addedItems = new HashSet<>();
 	
@@ -93,6 +98,7 @@ public class Cart { //Already initialized when customer is initiallized
 		this.quantity = quantity;
 	}
 	
+	//TODO remove when corresponding API was implemented
 	public void addBook(BookCartRepository bookCartRepo,BookStock bookStock) {
 		List<BookCart> existingItems = bookCartRepo.findByCartAndBookStock(this, bookStock);
 		Set<BookCart> carts = bookStock.getBooksInCart();

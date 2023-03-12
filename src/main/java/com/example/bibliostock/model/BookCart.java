@@ -15,22 +15,24 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="BooKCart")
+@Table(name="BookCart") //This table manages each inventoried books(bookStock)added to a cart
 public class BookCart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="CartID")
 	@JsonIgnore
 	@JsonProperty("cart")
 	private Cart cart;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	//One Cart has many inventoried books
+	//same inventoried books are in many carts
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="bookID")
 	@JoinColumn(name="formatID")
-	@JsonIgnore
+//	@JsonIgnore
 	@JsonProperty("bookStock")
 	private BookStock bookStock;
 	

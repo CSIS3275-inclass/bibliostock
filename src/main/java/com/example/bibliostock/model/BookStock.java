@@ -1,10 +1,23 @@
 package com.example.bibliostock.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.example.bibliostock.request.BookFormatRequest;
+import com.example.bibliostock.request.BookStockRequest;
+import com.example.bibliostock.response.MessageResponse;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -25,10 +38,10 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name="BookStock")
-
-//track the inventory level of each book+format
+@Table(name="BookStock") //Manages inventoried books (a book of a specific format in the inventory)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") //serialize relationship-related fields without causing infinite loop
 public class BookStock {
+
 	
 	@EmbeddedId
 	private BookFormatID ID; //Composite key: bookID and formatID
@@ -36,7 +49,7 @@ public class BookStock {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="formatID", 
 		referencedColumnName = "ID",
-		insertable=false, updatable=false)
+		insertable=false, updatable=false) 	//FormatID can no longer be updated when it's added - IT has to be removed to set a different one 
 	@MapsId("formatID") //what's in BookFormatID embedded class
 	@JsonIgnore
 	@JsonProperty("format")
@@ -46,7 +59,7 @@ public class BookStock {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="bookID", 
 		referencedColumnName = "ID",
-		insertable=false, updatable=false)
+		insertable=false, updatable=false) 	//BookID can no longer be updated when it's added - IT has to be removed to set a different one
 	@MapsId("bookID") //what's in BookFormatID embedded class
 	@JsonIgnore
 	@JsonProperty("book")
@@ -56,7 +69,7 @@ public class BookStock {
 	//a manager can add multiple inventory items
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="managerID")
-	@JsonIgnore
+//	@JsonIgnore
 	@JsonProperty("manager")
 	private Manager manager;
 	
@@ -90,6 +103,7 @@ public class BookStock {
 	
 	//a cart can have an instance of inventory item 
 	//an inventory item can be in multiple carts
+	//CascadeType.ALL so any changes made to the inventory item affects the related cart items
 	@OneToMany(mappedBy="bookStock",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<BookCart> booksInCart = new HashSet<>();
@@ -129,35 +143,20 @@ public class BookStock {
 		isRemoved = false;
 	}
 	
-	
-	
+	public void setID(BookFormatID id) {
+		this.ID=id;
+	}
+	public BookFormatID getID() {
+		return ID;
+	}
 	public Format getFormat() {
 		return format;
 	}
 
-	//FormatID can no longer be updated when it's added - IT has to be removed to set a different one 
-//	public void setFormat(Format format) {
-//		this.format = format;
-//		this.formatID=format.getId();
-//		this.ID.setFormatID(format.getId());
-//		Set<BookStock> bookStocks= format.getBookStocks();
-//		bookStocks.add(this);
-//		format.setBookStocks(bookStocks);
-//	}
 
 	public Book getBook() {
 		return book;
 	}
-
-	//BookID can no longer be updated when it's added - IT has to be removed to set a different one
-//	public void setBook(Book book) {
-//		this.book = book;
-//		this.bookID=book.getID();
-//		this.ID.setBookID(book.getID());
-//		Set<BookStock> bookStocks = book.getBookStocks();
-//		bookStocks.add(this);
-//		book.setBookStocks(bookStocks);
-//	}
 
 	public Manager getManager() {
 		return manager;
@@ -235,6 +234,7 @@ public class BookStock {
 		this.booksInCart = booksInCart;
 	}
 	
+
 	
 	
 }

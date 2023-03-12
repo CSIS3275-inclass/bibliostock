@@ -16,7 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Format")
+@Table(name = "book_Format")
 public class Format {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
