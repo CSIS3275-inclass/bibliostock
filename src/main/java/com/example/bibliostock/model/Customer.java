@@ -65,6 +65,14 @@ public class Customer extends User{
 		return cart;
 	}
 	
+	public Favorite getFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(Favorite favorite) {
+		this.favorite = favorite;
+	}
+
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
