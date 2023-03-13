@@ -27,15 +27,21 @@ public class Favorite {
 	//A Customer only has one favorite
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="customerID", nullable=false)
+	@JsonIgnore
 	private Customer customer;
 	
 	//One favorite has multiple books
 	//A book can be in multiple favorites
 	@ManyToMany(mappedBy="favorites", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
+	//@JsonIgnore
 	@JsonProperty("books")
 	private Set<Book> books = new HashSet<>();
 	
+	public long getID() {
+		return ID;
+	}
+
+
 	public Favorite() {
 		
 	}
