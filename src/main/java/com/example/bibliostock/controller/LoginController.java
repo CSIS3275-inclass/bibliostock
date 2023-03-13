@@ -41,6 +41,7 @@ public class LoginController {
 	@Autowired
 	UserRepository userRepo;
 	
+	//List all users
 	@GetMapping("/users")
 	public ResponseEntity<Set<User>> getUsers(){
 		try {
@@ -52,7 +53,7 @@ public class LoginController {
 		}
 	}
 	
-	//Add an item to a Cart with cart ID, and (bookID + formatID) for inventory item
+	//Log in
 	@PostMapping("/login/{isManager}")
 	public ResponseEntity<?> login(@PathVariable("isManager") int isManager, @RequestBody LoginRequest loginRequest) {
 		try {
@@ -155,7 +156,9 @@ public class LoginController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	@PostMapping("/manager/new") //has to be done by an admin
+	
+	//Create manager account - has to be done by an admin
+	@PostMapping("/manager/new") 
 	public ResponseEntity<?> createManagerAccount(@RequestBody ManagerSignUpRequest request,
 												RedirectAttributes redirectAttributes
 			){

@@ -41,7 +41,7 @@ public class Book {
 	
 	//updated every time a score is added to the book
 	@Column(name = "averageReview")
-	private float averageReview;
+	private Double averageReview;
 	
 	@Column(name = "publicationDate")
 	@Temporal(TemporalType.DATE)
@@ -80,7 +80,6 @@ public class Book {
 	@OneToMany(mappedBy="book",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JsonIgnore
 	private Set<BookStock> bookStocks = new HashSet<>();
-
 	
 	public Book() {
 		
@@ -94,7 +93,16 @@ public class Book {
 		this.publicationDate=publication;
 	}
 	
-	public void info() { //just for testing will remove later
+	public Book(String iSBN, Double averageReview, String title, String synopsis, LocalDate publication) {
+		super();
+		ISBN = iSBN;
+		this.averageReview = averageReview;
+		this.title = title;
+		this.synopsis = synopsis;
+		this.publicationDate=publication;
+	}
+	
+	public void info() { 
 		System.out.println(this.ID+" "+this.ISBN+" "+this.title);
 	}
 	
@@ -127,11 +135,11 @@ public class Book {
 		this.synopsis = synopsis;
 	}
 
-	public float getAverageReview() {
+	public Double getAverageReview() {
 		return averageReview;
 	}
 
-	public void setAverageReview(float averageReview) {
+	public void setAverageReview(Double averageReview) {
 		this.averageReview = averageReview;
 	}
 	public LocalDate getPublicationDate() {

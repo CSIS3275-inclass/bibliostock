@@ -101,7 +101,7 @@ public class HomepageController {
 	}
 	
 	
-	//
+	//Display authors with name
 	@GetMapping("/homepage/authors/{authorName}")
 	public ResponseEntity<Set<Book>> getAuthorByName(@PathVariable String authorName){
 		
@@ -121,7 +121,7 @@ public class HomepageController {
 	}
 	
 	
-	
+	//Display all the genres
 	@GetMapping("/homepage/genres")
 	public ResponseEntity<List<Genre>> getAllGenre() {
 		try {
@@ -141,16 +141,15 @@ public class HomepageController {
 		}
 	}
 	
+	//Search by genre
 	@GetMapping("/homepage/genresearch")
 	public ResponseEntity<Set<Book>> searchBooksByGenre(@RequestParam(required = false) String genreName,@RequestParam(required = false) String bookTitle){
 		
 		try {
 			Set<Book> books = new HashSet<>();
 		if (genreName != null && bookTitle != null) {
-			List<Book> booksbyGenre = bookRepo.findByGenreName(genreName);
-			List<Book> booksByTitle = bookRepo.findByTitleContainingIgnoreCase(bookTitle);
-			booksbyGenre.addAll(booksByTitle);
-			books.addAll(booksbyGenre);
+			List<Book> booksByTitle = bookRepo.findByTitleContainingIgnoreCaseAndGenresNameContainingIgnoreCase(bookTitle,genreName);
+			books.addAll(booksByTitle);
 			
 		}else if(genreName != null) {
 			List<Book> booksbyGenre = bookRepo.findByGenreName(genreName);

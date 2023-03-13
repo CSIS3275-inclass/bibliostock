@@ -50,6 +50,7 @@ public class BookStockController {
 	@Autowired
 	ManagerRepository managerRepo;
 	
+	//Get all items in stock
 	@GetMapping("/stocks")
 	public ResponseEntity<?> getBooksInStock() {
 		try {
@@ -61,6 +62,8 @@ public class BookStockController {
 			return new ResponseEntity<>(exception,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	//Add a new inventory item 
 	@PostMapping("/stock")
 	public ResponseEntity<?> addBookToStock(@RequestBody BookStockRequest bookStockRequest) {
 		try {
@@ -95,11 +98,6 @@ public class BookStockController {
 			}
 			else {
 						
-//				items.add(new BookStock(bookRepo.findById(bookFormatRequest.getBookID()).get(),
-//												formatRepo.findById(bookFormatRequest.getFormatID()).get(),
-//												bookStock.getPurchasePrice(), bookStock.getSellingPrice(), bookStock.getQuantityInStock(),
-//												manager.get(0)));
-			
 				String insertBookStock = "INSERT INTO BOOK_STOCK (BOOKID,FORMATID,ADDED_DATE,IS_REMOVED,PURCHASE_PRICE,QUANTITY_IN_STOCK,QUANTITY_SOLD,SELLING_PRICE,UPDATED_DATE,MANAGERID) "
 													+ "VALUES (?,?,?,?,?,?,?,?,?,?);";
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -120,18 +118,7 @@ public class BookStockController {
 				
 				return new ResponseEntity<> (bookStockRepo.findByBookIDAndFormatID(bookFormatRequest.getBookID(), bookFormatRequest.getFormatID())
 											,HttpStatus.CREATED);
-//				return new ResponseEntity<> (new MessageResponse(insertBookStock +" "+ bookFormatRequest.getBookID()
-//				+" "+ bookFormatRequest.getFormatID()
-//				+" "+LocalDate.now().format(formatter)
-//				+" "+false
-//				+" "+bookStock.getPurchasePrice()
-//				+" "+bookStock.getQuantityInStock()
-//				+" "+0
-//				+" "+bookStock.getSellingPrice()
-//				+" "+manager.get(0).getID())
-//											, HttpStatus.CREATED);
 			}
-//			return new ResponseEntity<>(new MessageResponse(bookFormatRequest.getBookID()+" "+bookFormatRequest.getFormatID()+"\n"+bookStockRepo.findByBookIDAndFormatID(bookFormatRequest.getBookID(),bookFormatRequest.getFormatID())),HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			MessageResponse exception = new MessageResponse(e.toString());
 			return new ResponseEntity<>(exception,HttpStatus.INTERNAL_SERVER_ERROR);

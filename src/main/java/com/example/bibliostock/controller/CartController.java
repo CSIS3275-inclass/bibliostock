@@ -51,9 +51,6 @@ public class CartController {
 	@Autowired
 	ManagerRepository managerRepo;
 	
-//	@Autowired
-//	CustomerRepository customerRepo;
-	
 	//Get all the carts - could be used from manager's side
 	@GetMapping("/carts")
 	public ResponseEntity<?> getCarts() {
@@ -84,7 +81,6 @@ public class CartController {
 				}
 				
 				return new ResponseEntity<>(cartRepo.findByID(ID).get(),HttpStatus.OK);
-//				return new ResponseEntity<>(bookCarts,HttpStatus.OK);
 			}
 			
 		} catch (Exception e) {
@@ -148,7 +144,6 @@ public class CartController {
 				
 			
 				return new ResponseEntity<>(theCart,HttpStatus.CREATED);
-//				return new ResponseEntity<>(cartItem,HttpStatus.CREATED);
 			}
 		} catch (Exception e) {
 			MessageResponse exception = new MessageResponse(e.toString());
@@ -201,7 +196,6 @@ public class CartController {
 					cartRepo.save(theCart);
 					
 					return new ResponseEntity<>(theCart, HttpStatus.OK);
-//					return new ResponseEntity<>(referencedCartItem, HttpStatus.OK);
 				}
 			}
 			
@@ -239,7 +233,6 @@ public class CartController {
 			cartRepo.save(theCart);
 		
 			return new ResponseEntity<>(new MessageResponse("deleted!"),HttpStatus.NO_CONTENT);
-//			return new ResponseEntity<>(theCart,HttpStatus.NO_CONTENT);
 			
 		} catch (Exception e) {
 			MessageResponse exception = new MessageResponse(e.toString());

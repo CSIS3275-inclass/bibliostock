@@ -116,9 +116,9 @@ public class FavoriteController {
 				}
 				
 				
-				//Delete bookid of a particular customer
+			//Delete bookid of a particular customer
 				@DeleteMapping("/favorites/{ID}/{bookid}")
-				public ResponseEntity<?> deleteCartItem(@PathVariable("ID") long ID, @PathVariable("bookid") long bookid) {
+				public ResponseEntity<?> deleteFavoriteItem(@PathVariable("ID") long ID, @PathVariable("bookid") long bookid) {
 					try {
 						Optional<Customer> customer =customerRepo.findByID(ID);
 				
@@ -133,6 +133,43 @@ public class FavoriteController {
 						jdbcTemplate.update(deleteBook, bookid, theFav.getID());
 					
 						return new ResponseEntity<>(new MessageResponse("deleted!"),HttpStatus.NO_CONTENT);
+
+						
+					}
+					}catch (Exception e) {
+						MessageResponse exception = new MessageResponse(e.toString());
+						return new ResponseEntity<>(exception,HttpStatus.INTERNAL_SERVER_ERROR);
+					}
+				}
+				
+				//Add a book to favorite
+				@PostMapping("/favorites/{ID}/{bookid}")
+				public ResponseEntity<?> addFavoriteItem(@PathVariable("ID") long ID, @PathVariable("bookid") long bookid){
+					try {
+						Optional<Customer> customer =customerRepo.findByID(ID);
+				
+						if(customer.isEmpty()) {
+							MessageResponse noCart= new MessageResponse("The customer doesn't exist.");
+							return new ResponseEntity<>(noCart,HttpStatus.NOT_FOUND);
+						} else {
+						
+							Optional<Book> book = bookRepo.findById(bookid);
+							if(book.isEmpty()) {
+								MessageResponse noBook= new MessageResponse("The book doesn't exist.");
+								return new ResponseEntity<>(noBook,HttpStatus.NOT_FOUND);
+							}
+							
+							
+						Favorite theFav = customer.get().getFavorite();
+						
+						if(theFav.getBooks().contains(book)) {
+							MessageResponse noBook= new MessageResponse("The book is already favorited.");
+							return new ResponseEntity<>(noBook,HttpStatus.CONFLICT);
+						}
+						theFav.addBook(book.get());
+						favRepo.save(theFav);
+					
+						return new ResponseEntity<>(theFav,HttpStatus.CREATED);
 
 						
 					}

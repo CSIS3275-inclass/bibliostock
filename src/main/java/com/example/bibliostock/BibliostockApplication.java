@@ -50,7 +50,6 @@ public class BibliostockApplication {
 			BookRepository bookRepo,
 			AuthorRepository authorRepo,
 			GenreRepository genreRepo,
-//			FavoriteRepository favoriteRepo,
 			SerieRepository serieRepo,
 			FormatRepository formatRepo,
 			BookStockRepository bookStockRepo,
@@ -64,7 +63,6 @@ public class BibliostockApplication {
 		ArrayList<Manager> managers = new ArrayList<Manager>();
 		ArrayList<Customer> customers = new ArrayList<Customer>();
 		ArrayList<Genre> genres = new ArrayList<Genre>();
-//		ArrayList<Favorite> favorites = new ArrayList<Favorite>();
 		ArrayList<Serie> series = new ArrayList<Serie>();
 		ArrayList<Format> formats = new ArrayList<Format>();
 		ArrayList<BookStock> inventoryItems= new ArrayList<BookStock>();
@@ -88,12 +86,11 @@ public class BibliostockApplication {
 		series.add(new Serie("Movie Movie"));
 		
 		//adding books
-		books.add(new Book("911786354-6","Escape from Fort Bravo","exploit innovative convergence",LocalDate.of(2022,9,24)));
-		books.add(new Book("727904546-4","My Father's Glory (La gloire de mon père)","transform sticky supply-chains",LocalDate.of(2022,7,25)));
-		books.add(new Book("743903283-7","Amandla! A Revolution in Four Part Harmony","deploy B2C partnerships",LocalDate.of(2022,8,24)));
-		books.add(new Book("809867284-0","At the Death House Door","scale cross-media e-business",LocalDate.of(2022,12,12)));
-		books.add(new Book("172553343-X","All the Young Men","target back-end paradigms",LocalDate.of(2022,9,24)));
-		
+		books.add(new Book("911786354-6",5.0,"Escape from Fort Bravo","exploit innovative convergence",LocalDate.of(2022,9,24)));
+		books.add(new Book("727904546-4",3.2,"My Father's Glory (La gloire de mon père)","transform sticky supply-chains",LocalDate.of(2022,7,25)));
+		books.add(new Book("743903283-7",4.4,"Amandla! A Revolution in Four Part Harmony","deploy B2C partnerships",LocalDate.of(2022,8,24)));
+		books.add(new Book("809867284-0",4.0,"At the Death House Door","scale cross-media e-business",LocalDate.of(2022,12,12)));
+		books.add(new Book("172553343-X",3.2,"All the Young Men","target back-end paradigms",LocalDate.of(2022,9,24)));
 		
 		//add author,genre to books
 		books.get(0).addAuthor(authors.get(0));
@@ -135,26 +132,17 @@ public class BibliostockApplication {
 		customers.add(new Customer("bbaystona","bdD0cO","ebrosia@army.mil","Suite 71"));
 		customers.add(new Customer("llifseyd","XY12bhRN","jbeavond@omniture.com","Room 608"));
 		
-		//adding to favorite
-//		favorites.add(new Favorite(customers.get(1)));
-//		favorites.get(0).addBook(books.get(1));
-		//adding to favorite/alternatively
-		customers.get(2).addToFavorite(books.get(3));
-		
 		bookRepo.saveAll(books);
 		authorRepo.saveAll(authors);
 		genreRepo.saveAll(genres);
 		serieRepo.saveAll(series);
 		formatRepo.saveAll(formats);
 		customerRepo.saveAll(customers);
-//		favoriteRepo.saveAll(favorites);
 		managerRepo.saveAll(managers);
 		
 		//add inventory items - ONLY when book,format, and other needed entities are saved
 		inventoryItems.add(new BookStock(books.get(0),formats.get(0),44.97,66.03,677,managers.get(0)));
 		bookStockRepo.saveAll(inventoryItems);
-		
-//		System.out.println(response.getBody());
 		
 		bookRepo.findAll().forEach(System.out::println);
 		books.get(1).info();
@@ -162,7 +150,6 @@ public class BibliostockApplication {
 		authorRepo.findAll().forEach(System.out::println);
 		customerRepo.findAll().forEach(System.out::println);
 		genreRepo.findAll().forEach(System.out::println);
-//		favoriteRepo.findAll().forEach(System.out::println);
 		serieRepo.findAll().forEach(System.out::println);
 		formatRepo.findAll().forEach(System.out::println);
 		bookStockRepo.findAll().forEach(System.out::println);
@@ -183,8 +170,6 @@ public class BibliostockApplication {
 			CartRepository cartRepo,
 			BookCartRepository bookCartRepo) {
 		return (arg) -> {
-			
-//			loadData(customerRepo, managerRepo, bookRepo, authorRepo, genreRepo, favoriteRepo, serieRepo, formatRepo, bookStockRepo, cartRepo, bookCartRepo);
 			loadData(customerRepo, managerRepo, bookRepo, authorRepo, genreRepo, serieRepo, formatRepo, bookStockRepo, cartRepo, bookCartRepo);
 			
 		};
