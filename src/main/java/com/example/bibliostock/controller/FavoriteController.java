@@ -82,7 +82,7 @@ public class FavoriteController {
 		}
 		
 		
-		//get the items of a favorite with FavoriteID 
+		//get the books added in favorite with FavoriteID 
 				@GetMapping("/favorites/{ID}/{bookid}")
 				public ResponseEntity<?> getFavoritesItems(@PathVariable("ID") long ID, @PathVariable("bookid") long bookid) {
 					try {
@@ -116,8 +116,8 @@ public class FavoriteController {
 				}
 				
 				
-				//Delete Cart item
-				@DeleteMapping("/favorite/{ID}/{bookid}")
+				//Delete bookid of a particular customer
+				@DeleteMapping("/favorites/{ID}/{bookid}")
 				public ResponseEntity<?> deleteCartItem(@PathVariable("ID") long ID, @PathVariable("bookid") long bookid) {
 					try {
 						Optional<Customer> customer =customerRepo.findByID(ID);
@@ -131,28 +131,9 @@ public class FavoriteController {
 						
 						String deleteBook = "DELETE FROM FAVORITE_BOOK WHERE BOOKID = ? AND FAVORITEID = ?;";
 						jdbcTemplate.update(deleteBook, bookid, theFav.getID());
-						
-						
-						//if(book.isEmpty())
-						//{
-						//	MessageResponse noBook= new MessageResponse("The book is not found inside Favorite");
-						//	return new ResponseEntity<>(noBook,HttpStatus.NOT_FOUND);
-						//}
-						
-											
-						//Set<Book> books = new HashSet<>();
-						
-						//books.addAll(theFav.getBooks());
-						
-						//books.remove(book.get(0));
-						
-						//theFav.setBooks(books);
-						
-						//favRepo.save(theFav);				
-						
 					
 						return new ResponseEntity<>(new MessageResponse("deleted!"),HttpStatus.NO_CONTENT);
-//						return new ResponseEntity<>(theCart,HttpStatus.NO_CONTENT);
+
 						
 					}
 					}catch (Exception e) {

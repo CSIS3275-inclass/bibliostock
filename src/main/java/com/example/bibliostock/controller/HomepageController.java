@@ -42,7 +42,7 @@ public class HomepageController {
 	
 	
 	
-	
+	//To display all Books on the homepage
 	@GetMapping("/homepage")
 	public ResponseEntity<List<Book>> getAllBooks() {
 		try {
@@ -62,6 +62,7 @@ public class HomepageController {
 		}
 	}
 	
+	//to display a specified book with a given id
 	@GetMapping("/homepage/{id}")
 	public ResponseEntity<Book> getBookById(
 			@PathVariable Long id){
@@ -79,7 +80,7 @@ public class HomepageController {
 	}
 	
 
-	
+	// To display all Authors from homepage
 	@GetMapping("/homepage/authors")
 	public ResponseEntity<List<Author>> getAllAuthors() {
 		try {
@@ -99,6 +100,8 @@ public class HomepageController {
 		}
 	}
 	
+	
+	//
 	@GetMapping("/homepage/authors/{authorName}")
 	public ResponseEntity<Set<Book>> getAuthorByName(@PathVariable String authorName){
 		
@@ -119,7 +122,7 @@ public class HomepageController {
 	
 	
 	
-	@GetMapping("/homepage/genre")
+	@GetMapping("/homepage/genres")
 	public ResponseEntity<List<Genre>> getAllGenre() {
 		try {
 			List<Genre> genres = new ArrayList<Genre>();
