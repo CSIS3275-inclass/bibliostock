@@ -10,6 +10,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.bibliostock.model.Author;
 import com.example.bibliostock.model.AuthorRepository;
@@ -33,6 +35,7 @@ import com.example.bibliostock.model.Manager;
 import com.example.bibliostock.model.ManagerRepository;
 import com.example.bibliostock.model.Serie;
 import com.example.bibliostock.model.SerieRepository;
+import com.example.bibliostock.request.BookStockRequest;
 
 @SpringBootApplication
 public class BibliostockApplication {
@@ -47,19 +50,21 @@ public class BibliostockApplication {
 			BookRepository bookRepo,
 			AuthorRepository authorRepo,
 			GenreRepository genreRepo,
-			FavoriteRepository favoriteRepo,
+//			FavoriteRepository favoriteRepo,
 			SerieRepository serieRepo,
 			FormatRepository formatRepo,
 			BookStockRepository bookStockRepo,
 			CartRepository cartRepo,
 			BookCartRepository bookCartRepo
 			) {
+		
+		
 		ArrayList<Book> books = new ArrayList<Book>();
 		ArrayList<Author> authors = new ArrayList<Author>();
 		ArrayList<Manager> managers = new ArrayList<Manager>();
 		ArrayList<Customer> customers = new ArrayList<Customer>();
 		ArrayList<Genre> genres = new ArrayList<Genre>();
-		ArrayList<Favorite> favorites = new ArrayList<Favorite>();
+//		ArrayList<Favorite> favorites = new ArrayList<Favorite>();
 		ArrayList<Serie> series = new ArrayList<Serie>();
 		ArrayList<Format> formats = new ArrayList<Format>();
 		ArrayList<BookStock> inventoryItems= new ArrayList<BookStock>();
@@ -131,8 +136,8 @@ public class BibliostockApplication {
 		customers.add(new Customer("llifseyd","XY12bhRN","jbeavond@omniture.com","Room 608"));
 		
 		//adding to favorite
-		favorites.add(new Favorite(customers.get(1)));
-		favorites.get(0).addBook(books.get(1));
+//		favorites.add(new Favorite(customers.get(1)));
+//		favorites.get(0).addBook(books.get(1));
 		//adding to favorite/alternatively
 		customers.get(2).addToFavorite(books.get(3));
 		
@@ -142,12 +147,14 @@ public class BibliostockApplication {
 		serieRepo.saveAll(series);
 		formatRepo.saveAll(formats);
 		customerRepo.saveAll(customers);
-		favoriteRepo.saveAll(favorites);
+//		favoriteRepo.saveAll(favorites);
 		managerRepo.saveAll(managers);
 		
 		//add inventory items - ONLY when book,format, and other needed entities are saved
 		inventoryItems.add(new BookStock(books.get(0),formats.get(0),44.97,66.03,677,managers.get(0)));
 		bookStockRepo.saveAll(inventoryItems);
+		
+//		System.out.println(response.getBody());
 		
 		bookRepo.findAll().forEach(System.out::println);
 		books.get(1).info();
@@ -155,7 +162,7 @@ public class BibliostockApplication {
 		authorRepo.findAll().forEach(System.out::println);
 		customerRepo.findAll().forEach(System.out::println);
 		genreRepo.findAll().forEach(System.out::println);
-		favoriteRepo.findAll().forEach(System.out::println);
+//		favoriteRepo.findAll().forEach(System.out::println);
 		serieRepo.findAll().forEach(System.out::println);
 		formatRepo.findAll().forEach(System.out::println);
 		bookStockRepo.findAll().forEach(System.out::println);
@@ -177,7 +184,8 @@ public class BibliostockApplication {
 			BookCartRepository bookCartRepo) {
 		return (arg) -> {
 			
-			loadData(customerRepo, managerRepo, bookRepo, authorRepo, genreRepo, favoriteRepo, serieRepo, formatRepo, bookStockRepo, cartRepo, bookCartRepo);
+//			loadData(customerRepo, managerRepo, bookRepo, authorRepo, genreRepo, favoriteRepo, serieRepo, formatRepo, bookStockRepo, cartRepo, bookCartRepo);
+			loadData(customerRepo, managerRepo, bookRepo, authorRepo, genreRepo, serieRepo, formatRepo, bookStockRepo, cartRepo, bookCartRepo);
 			
 		};
 	}

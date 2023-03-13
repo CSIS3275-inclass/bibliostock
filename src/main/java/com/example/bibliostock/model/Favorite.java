@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="Favorite")
-public class Favorite {
+public class Favorite { //Already initialized when customer is initialized
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long ID;
@@ -49,6 +49,7 @@ public class Favorite {
 	public Favorite(Customer customer, Set<Book> books) {
 		this.customer = customer;
 		this.books = books;
+		
 	}
 
 

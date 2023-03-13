@@ -41,6 +41,7 @@ public class Customer extends User{
 		super(username, password, email);
 		this.defaultAddress=defaultAddress;
 		this.cart=new Cart(this);
+		this.favorite=new Favorite(this);
 	}
 
 	public String getDefaultAddress() {
