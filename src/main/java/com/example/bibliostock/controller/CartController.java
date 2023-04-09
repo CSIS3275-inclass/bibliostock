@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bibliostock.model.BookCart;
@@ -152,9 +153,9 @@ public class CartController {
 	}
 	
 // Update a cart item quantity
-	@PutMapping("/cart/{ID}/{quantity}")
+	@PutMapping("/cart/{ID}")
 	public ResponseEntity<?> updateCartItem(@PathVariable("ID") long ID,
-			@PathVariable("quantity") int quantity,
+			@RequestParam("quantity") int quantity,
 			@RequestBody BookFormatRequest bookFormatRequest) {
 		try {
 			Optional<Cart> cart =cartRepo.findByID(ID);

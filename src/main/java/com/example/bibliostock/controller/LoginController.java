@@ -110,7 +110,7 @@ public class LoginController {
 	}
 	
 	// end session / logs user out
-	@PostMapping("/User/{ID}/logout")
+	@PostMapping("/user/{ID}/logout")
 	public ResponseEntity<?> logout(@PathVariable("ID") long ID){
 		try {
 			Optional<User> userAccount = userRepo.findById(ID);
@@ -134,7 +134,7 @@ public class LoginController {
 	}
 	
 	//create customer account
-	@PostMapping("/signup")
+	@PostMapping("/signup/customer")
 	public ResponseEntity<?> createCustomerAccount(@RequestBody SignUpRequest signUpRequest){
 		try {
 			if(!customerRepo.findByUsername(signUpRequest.getUserName()).isEmpty())
@@ -158,7 +158,7 @@ public class LoginController {
 	}
 	
 	//Create manager account - has to be done by an admin
-	@PostMapping("/manager/new") 
+	@PostMapping("/signup/manager") 
 	public ResponseEntity<?> createManagerAccount(@RequestBody ManagerSignUpRequest request,
 												RedirectAttributes redirectAttributes
 			){
