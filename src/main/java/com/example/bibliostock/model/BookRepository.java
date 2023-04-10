@@ -30,5 +30,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	
 	List<Book> findByAverageReviewGreaterThanEqual(Double averageReview);
 	
+	Optional<Book> findByID(long ID);
+	
 }
 	

@@ -27,6 +27,8 @@ import com.example.bibliostock.model.BookStock;
 import com.example.bibliostock.model.BookStockRepository;
 import com.example.bibliostock.model.Cart;
 import com.example.bibliostock.model.CartRepository;
+import com.example.bibliostock.model.Customer;
+import com.example.bibliostock.model.CustomerRepository;
 import com.example.bibliostock.model.FormatRepository;
 import com.example.bibliostock.model.ManagerRepository;
 import com.example.bibliostock.request.BookFormatRequest;
@@ -51,6 +53,32 @@ public class CartController {
 	BookStockRepository bookStockRepo;
 	@Autowired
 	ManagerRepository managerRepo;
+	@Autowired
+	CustomerRepository customerRepo;
+	
+	//get cart by customerid
+	@GetMapping("/user/{ID}/cart")
+	public ResponseEntity<?> getCartByUser(@PathVariable("ID") long ID){
+		try {
+			Optional<Customer> customer = customerRepo.findByID(ID);
+			if(!customer.isEmpty()) {
+				Optional<Cart> cart = cartRepo.findByCustomer(customer.get());
+				if(!cart.isEmpty()) {
+					return new ResponseEntity<>(cart.get(),HttpStatus.OK);
+				}
+				else {
+					return new ResponseEntity<>(new MessageResponse("Cart not found"),HttpStatus.NOT_FOUND);
+				}
+			}
+			else {
+				return new ResponseEntity<>(new MessageResponse("User not found"),HttpStatus.NOT_FOUND);
+			}
+			
+		} catch (Exception e) {
+			MessageResponse exception = new MessageResponse(e.toString());
+			return new ResponseEntity<>(exception,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
 	//Get all the carts - could be used from manager's side
 	@GetMapping("/carts")

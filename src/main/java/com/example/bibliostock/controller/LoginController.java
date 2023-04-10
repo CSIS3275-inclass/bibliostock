@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -48,6 +49,20 @@ public class LoginController {
 			Set<User> users = new HashSet<>();
 			users.addAll(userRepo.findAll());
 			return new ResponseEntity<>(users,HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/user")
+	public ResponseEntity<?> getUser(@RequestParam("userId") long userId){
+		try {
+			Optional<User> user =userRepo.findById(userId); 
+			if(user.isEmpty())
+				return new ResponseEntity<>(new MessageResponse("user doesn't exist"),HttpStatus.NOT_FOUND);
+			else
+				return new ResponseEntity<>(user.get(),HttpStatus.OK);
+				
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -139,10 +154,17 @@ public class LoginController {
 		try {
 			if(!customerRepo.findByUsername(signUpRequest.getUserName()).isEmpty())
 			{
-				return new ResponseEntity<>(new MessageResponse("Username already exists."),HttpStatus.CONFLICT);
+				return new ResponseEntity<>(new MessageResponse("Username already exists or is invalid."),HttpStatus.CONFLICT);
+			}
+			if(signUpRequest.getPassword().length()<8) {
+				return new ResponseEntity<>(new MessageResponse("Password must contain at least 8 characters."),HttpStatus.CONFLICT);
 			}
 			if(!customerRepo.findByEmail(signUpRequest.getEmail()).isEmpty()) {
-				return new ResponseEntity<>(new MessageResponse("Email already exists."),HttpStatus.CONFLICT);
+				return new ResponseEntity<>(new MessageResponse("Email already exists or is invalid."),HttpStatus.CONFLICT);
+			}
+			if(signUpRequest.getDefaultAddress().isBlank()) {
+				return new ResponseEntity<>(new MessageResponse("Address cannot be blank."),HttpStatus.CONFLICT);
+				
 			}
 			customerRepo.save(new Customer(signUpRequest.getUserName(),
 											signUpRequest.getPassword(),

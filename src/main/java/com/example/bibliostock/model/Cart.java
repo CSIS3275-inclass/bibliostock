@@ -30,6 +30,7 @@ import jakarta.transaction.Transactional;
 public class Cart { //Already initialized when customer is initialized
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@JsonProperty("id")
 	private long ID;
 	
 	@Column(name="total")
