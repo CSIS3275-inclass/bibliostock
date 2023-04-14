@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bibliostock.model.Author;
 import com.example.bibliostock.model.AuthorRepository;
 import com.example.bibliostock.model.Book;
 import com.example.bibliostock.model.BookCart;
@@ -23,6 +24,8 @@ import com.example.bibliostock.model.BookRepository;
 import com.example.bibliostock.model.BookStockRepository;
 import com.example.bibliostock.model.Format;
 import com.example.bibliostock.model.FormatRepository;
+import com.example.bibliostock.model.Genre;
+import com.example.bibliostock.model.GenreRepository;
 import com.example.bibliostock.response.MessageResponse;
 
 
@@ -42,6 +45,9 @@ public class BookController {
 	
 	@Autowired
 	FormatRepository formatRepo;
+	
+	@Autowired
+	GenreRepository genreRepo;
 	
 	//get Book by ID
 	@GetMapping("/book/{ID}")
@@ -116,6 +122,48 @@ public class BookController {
 		List<Book> books = bookRepo.findAll();
 		return new ResponseEntity<>(books,HttpStatus.OK);
 	}
+
+	
+	// To display all Authors
+	@GetMapping("/books/authors")
+	public ResponseEntity<List<Author>> getAllAuthors() {
+		try {
+			List<Author> authors = new ArrayList<Author>();
+
+			authorRepo.findAll().forEach(authors::add);
+					
+
+			if (authors.isEmpty()) {
+				return new ResponseEntity(HttpStatus.NO_CONTENT);
+			}
+
+			return new ResponseEntity(authors, HttpStatus.OK);
+
+		}catch (Exception e) {
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	//Display all the genres
+	@GetMapping("/books/genres")
+	public ResponseEntity<List<Genre>> getAllGenre() {
+		try {
+			List<Genre> genres = new ArrayList<Genre>();
+
+			genreRepo.findAll().forEach(genres::add);
+					
+
+			if (genres.isEmpty()) {
+				return new ResponseEntity(HttpStatus.NO_CONTENT);
+			}
+
+			return new ResponseEntity(genres, HttpStatus.OK);
+
+		}catch (Exception e) {
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	
 
 	//Filter books by review
@@ -125,6 +173,5 @@ public class BookController {
 	    System.out.print(bookReview);
 	    return new ResponseEntity<>(bookReview,HttpStatus.OK);
 	}
-
 	
 }

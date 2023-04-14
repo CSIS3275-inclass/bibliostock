@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bibliostock.model.BookCart;
 import com.example.bibliostock.model.BookCartRepository;
 import com.example.bibliostock.model.BookRepository;
 import com.example.bibliostock.model.BookStock;
 import com.example.bibliostock.model.BookStockRepository;
+import com.example.bibliostock.model.Cart;
 import com.example.bibliostock.model.CartRepository;
 import com.example.bibliostock.model.FormatRepository;
 import com.example.bibliostock.model.Manager;
@@ -57,6 +61,25 @@ public class BookStockController {
 			List<BookStock> items = new ArrayList<BookStock>();
 			bookStockRepo.findAll().forEach(items::add);
 			return new ResponseEntity<>(items,HttpStatus.OK);
+		} catch (Exception e) {
+			MessageResponse exception = new MessageResponse(e.toString());
+			return new ResponseEntity<>(exception,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	//Get bookstock by book id
+	@GetMapping("/stocks/book/{ID}")
+	public ResponseEntity<?> getBooksInStockById(@PathVariable("ID") long ID) {
+		try {
+			List<BookStock> bookstocks =bookStockRepo.findByBookID(ID);
+
+			if(bookstocks.isEmpty()) {
+				MessageResponse noBookStock= new MessageResponse("The book is not in stock");
+				return new ResponseEntity<>(noBookStock,HttpStatus.NOT_FOUND);
+			}
+			else {
+				return new ResponseEntity<>(bookstocks,HttpStatus.OK);
+			}
 		} catch (Exception e) {
 			MessageResponse exception = new MessageResponse(e.toString());
 			return new ResponseEntity<>(exception,HttpStatus.INTERNAL_SERVER_ERROR);

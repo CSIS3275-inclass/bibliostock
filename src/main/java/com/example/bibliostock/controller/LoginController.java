@@ -191,16 +191,34 @@ public class LoginController {
 			SignUpRequest signUpRequest = request.getSignUpRequest();
 			List<Manager> managerAccount = managerRepo.findByUsername(loginRequest.getUserName());
 			
+			//check the creating manager account is valid
 			if(managerAccount.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 			}
 			else {
+				// check the creating manager's password
+				if(!(managerAccount.get(0).getPassword().equals(request.getLoginRequest().getPassword()))) {
+					return new ResponseEntity<>(new MessageResponse("The password entered is invalid. "),HttpStatus.CONFLICT);
+				}
+				
+				//check the creating manager is logged in and has the right permissions
 				Boolean activeSession = managerAccount.get(0).getIsActive();
 				Boolean isAdmin = managerAccount.get(0).getIsAdmin();
 				
 				if(activeSession) { 
 					if(isAdmin) {
+						//check entered username, password, or email is empty/ doesn't contain enough character
+						if(signUpRequest.getUserName().length()<6) {
+							return new ResponseEntity<>(new MessageResponse("Username must contain at least 6 characters"),HttpStatus.CONFLICT);
+						}
+						if(signUpRequest.getPassword().length()<8) {
+							return new ResponseEntity<>(new MessageResponse("Password must contain at least 8 characters"),HttpStatus.CONFLICT);
+						}
+						if(signUpRequest.getEmail().length()==0) {
+							return new ResponseEntity<>(new MessageResponse("Email must not be empty"),HttpStatus.CONFLICT);
+						}
 						
+						//check if username/email already exist
 						if(!managerRepo.findByUsername(signUpRequest.getUserName()).isEmpty())
 						{
 							return new ResponseEntity<>(new MessageResponse("Username already exists."),HttpStatus.CONFLICT);
@@ -208,6 +226,8 @@ public class LoginController {
 						if(!managerRepo.findByEmail(signUpRequest.getEmail()).isEmpty()) {
 							return new ResponseEntity<>(new MessageResponse("Email already exists."),HttpStatus.CONFLICT);
 						}
+						
+						//if all criteria are met
 						managerRepo.save(new Manager(signUpRequest.getUserName(),
 								signUpRequest.getPassword(),
 								signUpRequest.getEmail(),
@@ -223,7 +243,8 @@ public class LoginController {
 				}else { //inactive session -> redirect to login
 					redirectAttributes.addFlashAttribute("isManager", 1);
 				    redirectAttributes.addFlashAttribute("loginRequest", loginRequest);
-				    return new ResponseEntity<>(headers,HttpStatus.UNAUTHORIZED);
+				    
+				    return new ResponseEntity<>(new MessageResponse("User not logged in"),HttpStatus.UNAUTHORIZED);
 				    
 				}
 			}

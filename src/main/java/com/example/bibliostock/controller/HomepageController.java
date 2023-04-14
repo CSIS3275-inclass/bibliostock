@@ -80,25 +80,7 @@ public class HomepageController {
 	}
 	
 
-	// To display all Authors from homepage
-	@GetMapping("/homepage/authors")
-	public ResponseEntity<List<Author>> getAllAuthors() {
-		try {
-			List<Author> authors = new ArrayList<Author>();
 
-			authorRepo.findAll().forEach(authors::add);
-					
-
-			if (authors.isEmpty()) {
-				return new ResponseEntity(HttpStatus.NO_CONTENT);
-			}
-
-			return new ResponseEntity(authors, HttpStatus.OK);
-
-		}catch (Exception e) {
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
 	
 	
 	//Display authors with name
@@ -121,28 +103,10 @@ public class HomepageController {
 	}
 	
 	
-	//Display all the genres
-	@GetMapping("/homepage/genres")
-	public ResponseEntity<List<Genre>> getAllGenre() {
-		try {
-			List<Genre> genres = new ArrayList<Genre>();
 
-			genreRepo.findAll().forEach(genres::add);
-					
-
-			if (genres.isEmpty()) {
-				return new ResponseEntity(HttpStatus.NO_CONTENT);
-			}
-
-			return new ResponseEntity(genres, HttpStatus.OK);
-
-		}catch (Exception e) {
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
 	
 	//Search by genre
-	@GetMapping("/homepage/genresearch")
+	@GetMapping("/books/genresearch")
 	public ResponseEntity<Set<Book>> searchBooksByGenre(@RequestParam(required = false) String genreName,@RequestParam(required = false) String bookTitle){
 		
 		try {
