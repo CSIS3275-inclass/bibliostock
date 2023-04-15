@@ -50,7 +50,7 @@ public class Book {
 	//an author can write multiple books
 	//a book can be written by multiple authors
 	@ManyToMany(mappedBy="books")
-	@JsonIgnore 
+//	@JsonIgnore 
 	@JsonProperty("authors")
 	private Set<Author> authors= new HashSet<>();
 
